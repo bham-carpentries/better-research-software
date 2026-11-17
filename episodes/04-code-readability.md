@@ -358,13 +358,14 @@ read and easier to introduce mistakes. Such things may seem harmless as they do 
 they can potentially lead to subtle program logic errors, unexpected behavior, wrong results and issues later on - 
 making them especially tricky to detect and fix. Over time, this makes the codebase more fragile and harder to maintain and extend.
 
-:::::: challenge
+:::::::::::::::::::::::::::::::: callout
 
-### Remove an unused variable (2 min)
+[Linters](https://glosario.carpentries.org/en/#linter) (static analysis tools) can be very helpful with tasks like this.
+Linters identify unused variables and unused imports among other useful tasks for formatting and making your code readable.
 
-Find and remove an unused variable in our code. Then, commit the updated code to the git repo.
+Some common linters for Python include PyLint, Black, Ruff and Flake8.
 
-::: solution
+::::::::::::::::::::::::::::::::::::::::
 
 Variable `fieldnames` (containing column names for CSV data file) is defined but never used in the code - it should be deleted.
 
@@ -440,18 +441,6 @@ Commit changes:
 (venv_spacewalks) $ git commit -m "Remove unused variable fieldname"
 (venv_spacewalks) $ git push origin main
 ```
-
-:::
-::::::
-
-:::::::::::::::::::::::::::::::: callout
-
-[Linters](https://glosario.carpentries.org/en/#linter) (static analysis tools) can be very helpful with tasks like this.
-Linters identify unused variables and unused imports among other useful tasks for formatting and making your code readable.
-
-Some common linters for Python include PyLint, Black, Ruff and Flake8.
-
-::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::: callout
 
