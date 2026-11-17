@@ -1,7 +1,7 @@
 ---
 title: Code readability
 teaching: 60
-exercises: 30
+exercises: 25
 ---
 
 ::: questions
@@ -358,92 +358,6 @@ read and easier to introduce mistakes. Such things may seem harmless as they do 
 they can potentially lead to subtle program logic errors, unexpected behavior, wrong results and issues later on - 
 making them especially tricky to detect and fix. Over time, this makes the codebase more fragile and harder to maintain and extend.
 
-:::::: challenge
-
-### Remove an unused variable (2 min)
-
-Find and remove an unused variable in our code. Then, commit the updated code to the git repo.
-
-::: solution
-
-Variable `fieldnames` (containing column names for CSV data file) is defined but never used in the code - it should be deleted.
-
-Updated code:
-
-```python
-import json
-import csv
-import datetime as dt
-import matplotlib.pyplot as plt
-
-# https://data.nasa.gov/resource/eva.json (with modifications)
-input_file = open('./eva-data.json', 'r', encoding='ascii')
-output_file = open('./eva-data.csv', 'w', encoding='utf-8')
-graph_file = './cumulative_eva_graph.png'
-
-
-data=[]
-
-for i in range(375):
-    line=input_file.readline()
-    print(line)
-    data.append(json.loads(line[1:-1]))
-#data.pop(0)
-## Comment out this bit if you don't want the spreadsheet
-
-csv_writer=csv.writer(output_file)
-
-time = []
-date =[]
-
-j=0
-for i in data:
-    print(data[j])
-    # and this bit
-    csv_writer.writerow(data[j].values())
-    if 'duration' in data[j].keys():
-        duration_str=data[j]['duration']
-        if duration_str == '':
-            pass
-        else:
-            duration_dt=dt.datetime.strptime(duration_str,'%H:%M')
-            duration_hours = dt.timedelta(hours=duration_dt.hour, minutes=duration_dt.minute, seconds=duration_dt.second).total_seconds()/(60*60)
-            print(duration_dt,duration_hours)
-            time.append(duration_hours)
-            if 'date' in data[j].keys():
-                date.append(dt.datetime.strptime(data[j]['date'][0:10], '%Y-%m-%d'))
-                #date.append(data[j]['date'][0:10])
-
-            else:
-                time.pop(0)
-    j+=1
-
-duration_dt=[0]
-for i in time:
-    duration_dt.append(duration_dt[-1]+i)
-
-date,time = zip(*sorted(zip(date, time)))
-
-plt.plot(date,duration_dt[1:], 'ko-')
-plt.xlabel('Year')
-plt.ylabel('Total time spent in space to date (hours)')
-plt.tight_layout()
-plt.savefig(graph_file)
-plt.show()
-
-```
-
-Commit changes:
-
-```bash
-(venv_spacewalks) $ git add eva_data_analysis.py
-(venv_spacewalks) $ git commit -m "Remove unused variable fieldname"
-(venv_spacewalks) $ git push origin main
-```
-
-:::
-::::::
-
 :::::::::::::::::::::::::::::::: callout
 
 [Linters](https://glosario.carpentries.org/en/#linter) (static analysis tools) can be very helpful with tasks like this.
@@ -452,6 +366,22 @@ Linters identify unused variables and unused imports among other useful tasks fo
 Some common linters for Python include PyLint, Black, Ruff and Flake8.
 
 ::::::::::::::::::::::::::::::::::::::::
+
+For example, the variable `fieldnames` (containing column names for CSV data file) is defined but never used in the code.
+
+Remove the definition of this code and rerun the code to make sure it still works:
+
+```bash
+(venv_spacewalks) $ python3 eva_data_analysis.py
+```
+
+Then, commit the changes:
+
+```bash
+(venv_spacewalks) $ git add eva_data_analysis.py
+(venv_spacewalks) $ git commit -m "Remove unused variable fieldname"
+(venv_spacewalks) $ git push origin main
+```
 
 :::::::::::::::::::::::::::::::: callout
 
